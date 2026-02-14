@@ -12,9 +12,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            /* JAVÍTVA: Csak egy # jel kell, és a kért színkód */
-            background: #fcc7fc; 
-            /* JAVÍTVA: A fehér szöveg nem látszik a rózsaszínen, ezért sötétre állítottam */
+            /* 1. MÓDOSÍTÁS: Új háttérszín */
+            background: #fcd4fc; 
             color: #2e1a2e; 
             font-family: Arial, sans-serif;
             overflow: hidden;
@@ -41,8 +40,8 @@
             border-radius: 12px;
             cursor: pointer;
             position: absolute;
-            /* JAVÍTVA: 'all'-ra állítva, hogy a pozíció (top, left) is animálva legyen, így csúszni fog */
-            transition: all 0.4s ease-out; 
+            /* 2. MÓDOSÍTÁS: Sokkal gyorsabb mozgás (0.4s -> 0.15s) */
+            transition: all 0.15s ease-out; 
             z-index: 20;
             font-weight: bold;
         }
@@ -66,19 +65,21 @@
         .success {
             font-size: 3rem;
             text-align: center;
-            animation: pop 0.6s ease forwards;
+            /* A szöveg is "robbanásszerűen" nő meg */
+            animation: pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             z-index: 30;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 100%;
-            color: white; /* A sikeres üzenet háttere sötét lesz, ott jó a fehér */
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            color: white; 
+            /* 3. MÓDOSÍTÁS: Nincs szöveg árnyék */
+            text-shadow: none; 
         }
 
         @keyframes pop {
-            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
             100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
 
@@ -107,29 +108,25 @@
         const yesBtn = document.getElementById("yes");
         const questionText = document.getElementById("question");
 
-        // Kezdőértékek
         let yesScale = 1;
         let noScale = 1;
 
         // A NEM gomb logikája
         noBtn.addEventListener("mouseover", () => {
-            // 1. Méretek számolása
-            yesScale = yesScale * 1.15; // Igen gomb 15%-kal nő
-            // JAVÍTVA: 8%-os csökkenés (megszorozzuk 0.92-vel)
-            noScale = noScale * 0.92;   
+            // Méretezés
+            yesScale = yesScale * 1.15; // +15%
+            noScale = noScale * 0.92;   // -8%
 
-            // 2. Méretek alkalmazása
             yesBtn.style.transform = `scale(${yesScale})`;
             noBtn.style.transform = `scale(${noScale})`;
 
-            // 3. Mozgás (Csúszás)
+            // Mozgás
             const maxX = window.innerWidth - noBtn.offsetWidth;
             const maxY = window.innerHeight - noBtn.offsetHeight;
 
             const randomX = Math.random() * maxX;
             const randomY = Math.random() * maxY;
 
-            // Mivel a CSS-ben bekapcsoltuk a transition-t, ez most csúszni fog
             noBtn.style.position = "fixed"; 
             noBtn.style.left = randomX + "px";
             noBtn.style.top = randomY + "px";
@@ -137,28 +134,25 @@
 
         // Az IGEN gomb logikája
         yesBtn.addEventListener("click", () => {
-            // Háttérszín váltás sötétebb/élénkebb színre a sikerélményhez
             document.body.style.background = "linear-gradient(135deg, #ff416c, #ff4b2b)";
             
-            // Eltüntetjük a régi elemeket
             noBtn.style.display = "none";
             yesBtn.style.display = "none";
             questionText.style.display = "none";
 
-            // Megjelenítjük az üzenetet
             document.body.innerHTML += `
                 <div class="success">
-                    Yay! Legjobb válasz! ❤️<br>
+                    Yay! Számítottam rá! ❤️<br>
                     Öveket becsatolni, ütközés!
                 </div>
             `;
             
-            // Indítjuk a konfettit
-            startConfetti();
+            // 4. MÓDOSÍTÁS: Robbanás indítása
+            explodeConfetti();
         });
 
-        // Konfetti animáció
-        function startConfetti() {
+        // ÚJ KONFETTI LOGIKA: ROBBANÁS KÖZÉPRŐL
+        function explodeConfetti() {
             const canvas = document.getElementById("confetti");
             const ctx = canvas.getContext("2d");
             canvas.width = window.innerWidth;
@@ -166,14 +160,19 @@
             
             const pieces = [];
             const colors = ["#ff4b2b", "#ff416c", "#4CAF50", "#FFD700", "#00C9FF", "#ffffff"];
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
 
-            for (let i = 0; i < 200; i++) {
+            for (let i = 0; i < 300; i++) {
                 pieces.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height - canvas.height,
-                    size: Math.random() * 10 + 5,
-                    speed: Math.random() * 5 + 3,
+                    x: centerX,
+                    y: centerY,
+                    size: Math.random() * 8 + 4,
                     color: colors[Math.floor(Math.random() * colors.length)],
+                    // Véletlenszerű sebesség és irány (X és Y tengelyen)
+                    vx: (Math.random() - 0.5) * 30, // Vízszintes szórás
+                    vy: (Math.random() - 0.5) * 30 - 5, // Függőleges szórás (kicsit felfelé)
+                    gravity: 0.5, // Gravitáció, hogy visszahulljon
                     rotation: Math.random() * 360,
                     rotationSpeed: Math.random() * 10 - 5
                 });
@@ -181,22 +180,33 @@
 
             function update() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let activePieces = 0;
+
                 pieces.forEach(p => {
-                    p.y += p.speed;
+                    // Fizika alkalmazása
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += p.gravity; // Gravitáció húzza lefelé
                     p.rotation += p.rotationSpeed;
+
+                    // Kirajzolás
                     ctx.save();
                     ctx.translate(p.x, p.y);
                     ctx.rotate(p.rotation * Math.PI / 180);
                     ctx.fillStyle = p.color;
                     ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
                     ctx.restore();
-                    
-                    if (p.y > canvas.height) {
-                        p.y = -20;
-                        p.x = Math.random() * canvas.width;
+
+                    // Csak akkor számoljuk, ha még a képernyőn van (vagy fölötte)
+                    if (p.y < canvas.height + 100) {
+                        activePieces++;
                     }
                 });
-                requestAnimationFrame(update);
+
+                // Ha még van látható darab, folytatjuk
+                if (activePieces > 0) {
+                    requestAnimationFrame(update);
+                }
             }
             update();
         }
