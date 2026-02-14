@@ -13,7 +13,7 @@
             justify-content: center;
             align-items: center;
             /* Kért háttérszín */
-            background: #1c101a; 
+            background: ##efaff0; 
             color: white;
             font-family: Arial, sans-serif;
             overflow: hidden;
@@ -46,7 +46,7 @@
 
         #yes {
             left: 40px;
-            top: 100px;
+            top: 100px; /* Egy vonalban lesznek */
             background: #4CAF50;
             color: white;
             /* Nincs box-shadow (glow) */
@@ -54,7 +54,7 @@
 
         #no {
             left: 220px;
-            top: 110px;
+            top: 100px; /* JAVÍTVA: 110px-ről 100px-re, hogy egy vonalban legyenek */
             background: #e53935;
             color: white;
         }
@@ -107,9 +107,9 @@
 
         // A NEM gomb logikája (mozgás + méretezés)
         noBtn.addEventListener("mouseover", () => {
-            // 1. Méretek számolása - ITT MÓDOSÍTOTTAM 15%-ra
-            yesScale = yesScale * 1.15; // Igen gomb 15%-kal nő (1.5 helyett 1.15)
-            noScale = noScale * 0.85;   // Nem gomb 15%-kal csökken (0.8 helyett 0.85)
+            // 1. Méretek számolása (15%-os logika)
+            yesScale = yesScale * 1.15; // Igen gomb 15%-kal nő
+            noScale = noScale * 0.85;   // Nem gomb 15%-kal csökken
 
             // 2. Méretek alkalmazása
             yesBtn.style.transform = `scale(${yesScale})`;
