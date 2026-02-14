@@ -12,9 +12,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            /* 1. MÓDOSÍTÁS: A háttér már az elején a végső gradiens */
+            /* Háttér: lineáris átmenet */
             background: linear-gradient(135deg, #ff416c, #ff4b2b);
-            /* 2. MÓDOSÍTÁS: Fehér szöveg */
             color: white; 
             font-family: Arial, sans-serif;
             overflow: hidden;
@@ -25,6 +24,8 @@
             margin-bottom: 40px;
             text-align: center;
             z-index: 10;
+            /* 1. MÓDOSÍTÁS: Nem félkövér (Bold), hanem normál */
+            font-weight: normal; 
         }
 
         .buttons {
@@ -40,33 +41,47 @@
             border-radius: 12px;
             cursor: pointer;
             position: absolute;
-            /* Gyors mozgás a Nem gombnak */
-            transition: all 0.15s ease-out; 
+            transition: all 0.15s ease-out; /* Gyors mozgás */
             z-index: 20;
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* Kis árnyék a gomboknak */
         }
 
-        /* 3. MÓDOSÍTÁS: Igen gomb stílusa */
+        /* 2. MÓDOSÍTÁS: Igen gomb lüktetése és glow */
         #yes {
             left: 40px;
             top: 100px;
             background: white;
             color: #290017;
+            /* Animáció hozzáadása: lüktetés + sárga fény */
+            animation: pulse 1.5s infinite; 
         }
 
-        /* 4. MÓDOSÍTÁS: Nem gomb stílusa */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 rgba(255, 215, 0, 0.4); /* Sárgás (Gold) árnyék */
+            }
+            50% {
+                transform: scale(1.1); /* Kicsit megnő */
+                box-shadow: 0 0 20px rgba(255, 215, 0, 1); /* Erős sárga ragyogás */
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 rgba(255, 215, 0, 0.4);
+            }
+        }
+
         #no {
             left: 220px;
             top: 100px;
             background: #290017;
             color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         .success {
             font-size: 3rem;
             text-align: center;
-            /* Robbanásszerű megjelenés */
             animation: pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             z-index: 30;
             position: fixed;
@@ -112,10 +127,16 @@
 
         // A NEM gomb logikája
         noBtn.addEventListener("mouseover", () => {
+            // 3. MÓDOSÍTÁS: Szövegcsere ikonra az első hovernél
+            noBtn.innerText = "😠";
+
             // Méretezés
             yesScale = yesScale * 1.15; // +15%
             noScale = noScale * 0.92;   // -8%
 
+            // Megjegyzés: Amikor itt JS-ből állítjuk a transform-ot, 
+            // az felülírja a CSS lüktető animációját. Ez így jó, 
+            // mert innentől a növekedés a lényeg.
             yesBtn.style.transform = `scale(${yesScale})`;
             noBtn.style.transform = `scale(${noScale})`;
 
@@ -133,8 +154,6 @@
 
         // Az IGEN gomb logikája
         yesBtn.addEventListener("click", () => {
-            // A háttér már jó, nem kell állítani
-            
             noBtn.style.display = "none";
             yesBtn.style.display = "none";
             questionText.style.display = "none";
@@ -146,58 +165,53 @@
                 </div>
             `;
             
-            // Animáció indítása (Konfetti + Szívek)
+            // Animáció indítása
             startAnimation();
         });
 
-        // ANIMÁCIÓK (Konfetti robbanás + Hulló szívek)
+        // ANIMÁCIÓK (Konfetti + Szívek)
         function startAnimation() {
             const canvas = document.getElementById("confetti");
             const ctx = canvas.getContext("2d");
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             
-            // Konfetti darabkák
             const particles = [];
             const colors = ["#ff4b2b", "#ff416c", "#4CAF50", "#FFD700", "#00C9FF", "#ffffff"];
-            
-            // Hulló szívecskék
             const hearts = [];
-
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
 
-            // 1. Konfetti inicializálása (robbanás)
+            // Robbanás
             for (let i = 0; i < 300; i++) {
                 particles.push({
                     x: centerX,
                     y: centerY,
                     size: Math.random() * 8 + 4,
                     color: colors[Math.floor(Math.random() * colors.length)],
-                    vx: (Math.random() - 0.5) * 30, // Robbanás ereje X
-                    vy: (Math.random() - 0.5) * 30 - 5, // Robbanás ereje Y
+                    vx: (Math.random() - 0.5) * 30,
+                    vy: (Math.random() - 0.5) * 30 - 5,
                     gravity: 0.5,
                     rotation: Math.random() * 360,
                     rotationSpeed: Math.random() * 10 - 5
                 });
             }
 
-            // 2. Szívecskék inicializálása (eső)
+            // Eső szívek
             for (let i = 0; i < 50; i++) {
                 hearts.push({
                     x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height - canvas.height, // Képernyő felett kezd
-                    size: Math.random() * 20 + 10, // Nagyobbak
-                    speed: Math.random() * 3 + 1, // Lassú esés
-                    sway: Math.random() * 2, // Oldalirányú mozgás
-                    offset: Math.random() * 100 // Szinusz hullám eltolás
+                    y: Math.random() * canvas.height - canvas.height,
+                    size: Math.random() * 20 + 10,
+                    speed: Math.random() * 3 + 1,
+                    sway: Math.random() * 2,
+                    offset: Math.random() * 100
                 });
             }
 
             function update() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                // --- KONFETTI FRISSÍTÉS ---
                 particles.forEach((p, index) => {
                     p.x += p.vx;
                     p.y += p.vy;
@@ -211,23 +225,19 @@
                     ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
                     ctx.restore();
 
-                    // Ha kiesett alul, töröljük a memóriából
                     if (p.y > canvas.height + 100) {
                         particles.splice(index, 1);
                     }
                 });
 
-                // --- SZÍVECSKE FRISSÍTÉS (Maradandó) ---
                 hearts.forEach(h => {
                     h.y += h.speed;
-                    // Szinuszos mozgás (hogy szépen dülöngéljenek lefelé)
                     h.x += Math.sin((h.y + h.offset) / 50) * 0.5;
 
                     ctx.font = `${h.size}px Arial`;
-                    ctx.fillStyle = "rgba(255, 255, 255, 0.8)"; // Félig áttetsző fehér
+                    ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
                     ctx.fillText("❤️", h.x, h.y);
 
-                    // Ha leért az aljára, visszakerül a tetejére (végtelen ciklus)
                     if (h.y > canvas.height) {
                         h.y = -50;
                         h.x = Math.random() * canvas.width;
