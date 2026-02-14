@@ -12,11 +12,13 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            /* Kért háttérszín */
-            background: ##efaff0; 
-            color: white;
+            /* JAVÍTVA: Csak egy # jel kell, és a kért színkód */
+            background: #fcc7fc; 
+            /* JAVÍTVA: A fehér szöveg nem látszik a rózsaszínen, ezért sötétre állítottam */
+            color: #2e1a2e; 
             font-family: Arial, sans-serif;
             overflow: hidden;
+            transition: background 0.5s ease;
         }
 
         h1 {
@@ -39,24 +41,26 @@
             border-radius: 12px;
             cursor: pointer;
             position: absolute;
-            /* CSAK a méretváltozás (transform) legyen animálva, a mozgás nem! Így azonnal ugrik. */
-            transition: transform 0.2s ease; 
-            z-index: 20; /* Magas z-index, hogy biztosan kattintható legyen */
+            /* JAVÍTVA: 'all'-ra állítva, hogy a pozíció (top, left) is animálva legyen, így csúszni fog */
+            transition: all 0.4s ease-out; 
+            z-index: 20;
+            font-weight: bold;
         }
 
         #yes {
             left: 40px;
-            top: 100px; /* Egy vonalban lesznek */
+            top: 100px;
             background: #4CAF50;
             color: white;
-            /* Nincs box-shadow (glow) */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         #no {
             left: 220px;
-            top: 100px; /* JAVÍTVA: 110px-ről 100px-re, hogy egy vonalban legyenek */
+            top: 100px;
             background: #e53935;
             color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .success {
@@ -69,6 +73,8 @@
             left: 50%;
             transform: translate(-50%, -50%);
             width: 100%;
+            color: white; /* A sikeres üzenet háttere sötét lesz, ott jó a fehér */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         @keyframes pop {
@@ -105,33 +111,33 @@
         let yesScale = 1;
         let noScale = 1;
 
-        // A NEM gomb logikája (mozgás + méretezés)
+        // A NEM gomb logikája
         noBtn.addEventListener("mouseover", () => {
-            // 1. Méretek számolása (15%-os logika)
+            // 1. Méretek számolása
             yesScale = yesScale * 1.15; // Igen gomb 15%-kal nő
-            noScale = noScale * 0.85;   // Nem gomb 15%-kal csökken
+            // JAVÍTVA: 8%-os csökkenés (megszorozzuk 0.92-vel)
+            noScale = noScale * 0.92;   
 
             // 2. Méretek alkalmazása
             yesBtn.style.transform = `scale(${yesScale})`;
             noBtn.style.transform = `scale(${noScale})`;
 
-            // 3. Ugrás (Teleport)
-            // Kiszámoljuk a képernyő szabad területét
+            // 3. Mozgás (Csúszás)
             const maxX = window.innerWidth - noBtn.offsetWidth;
             const maxY = window.innerHeight - noBtn.offsetHeight;
 
             const randomX = Math.random() * maxX;
             const randomY = Math.random() * maxY;
 
-            // Fix pozicionálás, hogy bárhová ugorhasson a képernyőn
+            // Mivel a CSS-ben bekapcsoltuk a transition-t, ez most csúszni fog
             noBtn.style.position = "fixed"; 
             noBtn.style.left = randomX + "px";
             noBtn.style.top = randomY + "px";
         });
 
-        // Az IGEN gomb logikája (kattintás)
+        // Az IGEN gomb logikája
         yesBtn.addEventListener("click", () => {
-            // Háttérszín váltás
+            // Háttérszín váltás sötétebb/élénkebb színre a sikerélményhez
             document.body.style.background = "linear-gradient(135deg, #ff416c, #ff4b2b)";
             
             // Eltüntetjük a régi elemeket
@@ -197,4 +203,3 @@
     </script>
 </body>
 </html>
- 
