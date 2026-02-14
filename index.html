@@ -87,7 +87,7 @@
 </head>
 <body>
 
-    <h1 id="question">És én hiányzom egy kicsit?</h1>
+    <h1 id="question">És én hiányzom egy kicsit? 👀</h1>
     
     <div class="buttons">
         <button id="yes">Igen</button>
@@ -107,9 +107,9 @@
 
         // A NEM gomb logikája (mozgás + méretezés)
         noBtn.addEventListener("mouseover", () => {
-            // 1. Méretek számolása
-            yesScale = yesScale * 1.5; // Igen gomb 50%-kal nő
-            noScale = noScale * 0.8;   // Nem gomb 20%-kal csökken
+            // 1. Méretek számolása - ITT MÓDOSÍTOTTAM 15%-ra
+            yesScale = yesScale * 1.15; // Igen gomb 15%-kal nő (1.5 helyett 1.15)
+            noScale = noScale * 0.85;   // Nem gomb 15%-kal csökken (0.8 helyett 0.85)
 
             // 2. Méretek alkalmazása
             yesBtn.style.transform = `scale(${yesScale})`;
@@ -142,7 +142,8 @@
             // Megjelenítjük az üzenetet
             document.body.innerHTML += `
                 <div class="success">
-                    Yay! Legjobb döntés! ❤️
+                    Yay! Legjobb válasz! ❤️<br>
+                    Öveket becsatolni, ütközés!
                 </div>
             `;
             
@@ -196,4 +197,3 @@
     </script>
 </body>
 </html>
- 
