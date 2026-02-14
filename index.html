@@ -1,166 +1,154 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="hu">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.3">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px}
-    span.s1 {font-kerning: none}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Van egy kérdésem...</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a1a1a, #2c2c2c);
+            color: white;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            transition: 0.5s ease;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .buttons {
+            position: relative;
+            width: 400px;
+            height: 250px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            position: absolute;
+            transition: 0.2s ease;
+        }
+
+        #yes {
+            left: 40px;
+            top: 100px;
+            background: #4CAF50;
+            color: white;
+            transform: scale(1.5);
+        }
+
+        #no {
+            left: 220px;
+            top: 110px;
+            background: #e53935;
+            color: white;
+        }
+
+        .success {
+            font-size: 3rem;
+            text-align: center;
+            animation: pop 0.6s ease forwards;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html lang="hu"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta charset="UTF-8"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;title&gt;Van egy kérdésem...&lt;/title&gt;</span></p>
-<p class="p1"><span class="s1">&lt;style&gt;</span></p>
-<p class="p1"><span class="s1">body {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>margin: 0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>height: 100vh;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>display: flex;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>flex-direction: column;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>justify-content: center;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>align-items: center;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>background: linear-gradient(135deg, #1a1a1a, #2c2c2c);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>color: white;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>font-family: Arial, sans-serif;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>overflow: hidden;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>transition: 0.5s ease;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">h1 {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>font-size: 2.5rem;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>margin-bottom: 40px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>text-align: center;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.buttons {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>position: relative;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>width: 400px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>height: 250px;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">button {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>padding: 15px 30px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>font-size: 1.2rem;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>border: none;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>border-radius: 12px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>cursor: pointer;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>position: absolute;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>transition: 0.2s ease;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">#yes {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>left: 40px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>top: 100px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>background: #4CAF50;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>color: white;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>transform: scale(1.5);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">#no {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>left: 220px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>top: 110px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>background: #e53935;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>color: white;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.success {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>font-size: 3rem;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>text-align: center;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>animation: pop 0.6s ease forwards;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">@keyframes pop {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>0% { transform: scale(0.5); opacity: 0; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>100% { transform: scale(1); opacity: 1; }</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">canvas {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>position: fixed;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>top: 0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>left: 0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>pointer-events: none;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p1"><span class="s1">&lt;/style&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;h1 id="question"&gt;És én hiányzom egy kicsit?&lt;/h1&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div class="buttons"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;button id="yes"&gt;Igen&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;button id="no"&gt;Nem&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;canvas id="confetti"&gt;&lt;/canvas&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;script&gt;</span></p>
-<p class="p1"><span class="s1">const noBtn = document.getElementById("no");</span></p>
-<p class="p1"><span class="s1">const yesBtn = document.getElementById("yes");</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">noBtn.addEventListener("mouseover", () =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const maxX = 300;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const maxY = 200;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>noBtn.style.left = Math.random() * maxX + "px";</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>noBtn.style.top = Math.random() * maxY + "px";</span></p>
-<p class="p1"><span class="s1">});</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">yesBtn.addEventListener("click", () =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>document.body.style.background = "linear-gradient(135deg, #ff416c, #ff4b2b)";</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>document.body.innerHTML = `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="success"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>Yay! Legjobb döntés! Öveket becsatolni! ❤️</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;canvas id="confetti"&gt;&lt;/canvas&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>startConfetti();</span></p>
-<p class="p1"><span class="s1">});</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">function startConfetti() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const canvas = document.getElementById("confetti");</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const ctx = canvas.getContext("2d");</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>canvas.width = window.innerWidth;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>canvas.height = window.innerHeight;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const pieces = [];</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const colors = ["#ff4b2b", "#ff416c", "#4CAF50", "#FFD700", "#00C9FF"];</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">  </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>for (let i = 0; i &lt; 150; i++) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>pieces.push({</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>x: Math.random() * canvas.width,</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>y: Math.random() * canvas.height - canvas.height,</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>size: Math.random() * 8 + 4,</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>speed: Math.random() * 3 + 2,</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>color: colors[Math.floor(Math.random() * colors.length)],</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>rotation: Math.random() * 360</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>});</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">  </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>function update() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>ctx.clearRect(0, 0, canvas.width, canvas.height);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>pieces.forEach(p =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>p.y += p.speed;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>p.rotation += 5;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>ctx.save();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>ctx.translate(p.x, p.y);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>ctx.rotate(p.rotation * Math.PI / 180);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>ctx.fillStyle = p.color;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>ctx.restore();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>if (p.y &gt; canvas.height) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>p.y = -10;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>p.x = Math.random() * canvas.width;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>});</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>requestAnimationFrame(update);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>update();</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p1"><span class="s1">&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+
+    <h1 id="question">És én hiányzom egy kicsit?</h1>
+    
+    <div class="buttons">
+        <button id="yes">Igen</button>
+        <button id="no">Nem</button>
+    </div>
+    
+    <canvas id="confetti"></canvas>
+
+    <script>
+        const noBtn = document.getElementById("no");
+        const yesBtn = document.getElementById("yes");
+
+        noBtn.addEventListener("mouseover", () => {
+            const maxX = 300;
+            const maxY = 200;
+            noBtn.style.left = Math.random() * maxX + "px";
+            noBtn.style.top = Math.random() * maxY + "px";
+        });
+
+        yesBtn.addEventListener("click", () => {
+            document.body.style.background = "linear-gradient(135deg, #ff416c, #ff4b2b)";
+            document.body.innerHTML = `
+                <div class="success">
+                    Yay! Legjobb döntés! Öveket becsatolni! ❤️
+                </div>
+                <canvas id="confetti"></canvas>
+            `;
+            startConfetti();
+        });
+
+        function startConfetti() {
+            const canvas = document.getElementById("confetti");
+            const ctx = canvas.getContext("2d");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const pieces = [];
+            const colors = ["#ff4b2b", "#ff416c", "#4CAF50", "#FFD700", "#00C9FF"];
+
+            for (let i = 0; i < 150; i++) {
+                pieces.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    size: Math.random() * 8 + 4,
+                    speed: Math.random() * 3 + 2,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    rotation: Math.random() * 360
+                });
+            }
+
+            function update() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                pieces.forEach(p => {
+                    p.y += p.speed;
+                    p.rotation += 5;
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotation * Math.PI / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    ctx.restore();
+                    
+                    if (p.y > canvas.height) {
+                        p.y = -10;
+                        p.x = Math.random() * canvas.width;
+                    }
+                });
+                requestAnimationFrame(update);
+            }
+            update();
+        }
+    </script>
 </body>
 </html>
