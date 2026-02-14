@@ -12,7 +12,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #1a1a1a, #2c2c2c);
+            /* MÓDOSÍTÁS 1: Új háttérszín beállítása */
+            background: #230d24; 
             color: white;
             font-family: Arial, sans-serif;
             overflow: hidden;
@@ -23,6 +24,7 @@
             font-size: 2.5rem;
             margin-bottom: 40px;
             text-align: center;
+            z-index: 10; /* Hogy a szöveg mindig a gombok felett legyen */
         }
 
         .buttons {
@@ -38,7 +40,8 @@
             border-radius: 12px;
             cursor: pointer;
             position: absolute;
-            transition: 0.2s ease;
+            transition: all 0.3s ease; /* Simább átmenet a növekedéshez/mozgáshoz */
+            z-index: 10;
         }
 
         #yes {
@@ -46,7 +49,8 @@
             top: 100px;
             background: #4CAF50;
             color: white;
-            transform: scale(1.5);
+            transform: scale(1.5); /* Kezdő méret */
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.5); /* Kis ragyogás */
         }
 
         #no {
@@ -60,6 +64,7 @@
             font-size: 3rem;
             text-align: center;
             animation: pop 0.6s ease forwards;
+            z-index: 20;
         }
 
         @keyframes pop {
@@ -72,6 +77,7 @@
             top: 0;
             left: 0;
             pointer-events: none;
+            z-index: 5;
         }
     </style>
 </head>
@@ -89,25 +95,61 @@
     <script>
         const noBtn = document.getElementById("no");
         const yesBtn = document.getElementById("yes");
+        const questionText = document.getElementById("question");
+
+        // MÓDOSÍTÁS 2: Állapotkövető változók
+        // Nyomon követjük az aktuális méreteket.
+        // Az Igen gomb 1.5-ről indul (lásd CSS), a Nem gomb 1.0-ról.
+        let currentYesScale = 1.5;
+        let currentNoScale = 1.0;
 
         noBtn.addEventListener("mouseover", () => {
-            const maxX = 300;
-            const maxY = 200;
-            noBtn.style.left = Math.random() * maxX + "px";
-            noBtn.style.top = Math.random() * maxY + "px";
+            // --- Igen gomb növelése ---
+            // Minden hovernél 50%-kal nő (megszorozzuk 1.5-tel)
+            currentYesScale *= 1.5;
+            yesBtn.style.transform = `scale(${currentYesScale})`;
+            
+            // --- Nem gomb zsugorítása ---
+            // Minden hovernél 20%-kal csökken (megszorozzuk 0.8-cal)
+            currentNoScale *= 0.8;
+            // Fontos: A ugrásnál a scale-t is alkalmazni kell, különben visszaugrik az eredeti méretre
+            
+            // --- Nem gomb nagy ugrása ---
+            // Az előző kód csak egy kis 300x200-as dobozban ugrált.
+            // Mostantól a teljes képernyőn bárhová ugorhat.
+            
+            // Kiszámoljuk az elérhető szélességet és magasságot (levonva a gomb méretét, hogy ne lógjon ki)
+            const availableWidth = window.innerWidth - noBtn.offsetWidth;
+            const availableHeight = window.innerHeight - noBtn.offsetHeight;
+            
+            const newLeft = Math.random() * availableWidth;
+            const newTop = Math.random() * availableHeight;
+
+            // A gomb pozícióját 'fixed'-re állítjuk, hogy a teljes ablakhoz viszonyítson, ne a .buttons dobozhoz
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = newLeft + "px";
+            noBtn.style.top = newTop + "px";
+            
+            // Alkalmazzuk az új (kisebb) méretet az új pozícióban is
+            noBtn.style.transform = `scale(${currentNoScale})`;
         });
 
         yesBtn.addEventListener("click", () => {
             document.body.style.background = "linear-gradient(135deg, #ff416c, #ff4b2b)";
-            document.body.innerHTML = `
-                <div class="success">
-                    Yay! Legjobb döntés! Öveket becsatolni! ❤️
+            // Eltüntetjük a gombokat és a kérdést
+            noBtn.style.display = "none";
+            yesBtn.style.display = "none";
+            questionText.style.display = "none";
+
+            document.body.innerHTML += `
+                <div class="success" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%;">
+                    Yay! Legjobb döntés! ❤️
                 </div>
-                <canvas id="confetti"></canvas>
             `;
             startConfetti();
         });
 
+        // Konfetti kód (változatlan)
         function startConfetti() {
             const canvas = document.getElementById("confetti");
             const ctx = canvas.getContext("2d");
@@ -115,40 +157,4 @@
             canvas.height = window.innerHeight;
             
             const pieces = [];
-            const colors = ["#ff4b2b", "#ff416c", "#4CAF50", "#FFD700", "#00C9FF"];
-
-            for (let i = 0; i < 150; i++) {
-                pieces.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height - canvas.height,
-                    size: Math.random() * 8 + 4,
-                    speed: Math.random() * 3 + 2,
-                    color: colors[Math.floor(Math.random() * colors.length)],
-                    rotation: Math.random() * 360
-                });
-            }
-
-            function update() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                pieces.forEach(p => {
-                    p.y += p.speed;
-                    p.rotation += 5;
-                    ctx.save();
-                    ctx.translate(p.x, p.y);
-                    ctx.rotate(p.rotation * Math.PI / 180);
-                    ctx.fillStyle = p.color;
-                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-                    ctx.restore();
-                    
-                    if (p.y > canvas.height) {
-                        p.y = -10;
-                        p.x = Math.random() * canvas.width;
-                    }
-                });
-                requestAnimationFrame(update);
-            }
-            update();
-        }
-    </script>
-</body>
-</html>
+            const colors = ["#ff4b2b",
