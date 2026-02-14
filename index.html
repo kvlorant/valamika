@@ -12,7 +12,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            /* Háttér: lineáris átmenet */
+            /* Háttér: lineáris átmenet már az elején */
             background: linear-gradient(135deg, #ff416c, #ff4b2b);
             color: white; 
             font-family: Arial, sans-serif;
@@ -24,7 +24,7 @@
             margin-bottom: 40px;
             text-align: center;
             z-index: 10;
-            /* 1. MÓDOSÍTÁS: Nem félkövér (Bold), hanem normál */
+            /* Nem félkövér */
             font-weight: normal; 
         }
 
@@ -41,29 +41,29 @@
             border-radius: 12px;
             cursor: pointer;
             position: absolute;
-            transition: all 0.15s ease-out; /* Gyors mozgás */
+            transition: all 0.15s ease-out; /* Gyors mozgás/növekedés */
             z-index: 20;
             font-weight: bold;
         }
 
-        /* 2. MÓDOSÍTÁS: Igen gomb lüktetése és glow */
+        /* Igen gomb: fehér alap, sötét betű, lüktetés */
         #yes {
             left: 40px;
             top: 100px;
             background: white;
             color: #290017;
-            /* Animáció hozzáadása: lüktetés + sárga fény */
+            /* Kezdetben lüktet */
             animation: pulse 1.5s infinite; 
         }
 
         @keyframes pulse {
             0% {
                 transform: scale(1);
-                box-shadow: 0 0 0 rgba(255, 215, 0, 0.4); /* Sárgás (Gold) árnyék */
+                box-shadow: 0 0 0 rgba(255, 215, 0, 0.4);
             }
             50% {
-                transform: scale(1.1); /* Kicsit megnő */
-                box-shadow: 0 0 20px rgba(255, 215, 0, 1); /* Erős sárga ragyogás */
+                transform: scale(1.1);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 1); /* Sárga glow */
             }
             100% {
                 transform: scale(1);
@@ -71,6 +71,7 @@
             }
         }
 
+        /* Nem gomb: sötét alap, fehér betű */
         #no {
             left: 220px;
             top: 100px;
@@ -108,7 +109,7 @@
 </head>
 <body>
 
-    <h1 id="question">És én hiányzom egy kicsit?</h1>
+    <h1 id="question">És én hiányzom egy kicsit? 👀</h1>
     
     <div class="buttons">
         <button id="yes">Igen</button>
@@ -127,16 +128,16 @@
 
         // A NEM gomb logikája
         noBtn.addEventListener("mouseover", () => {
-            // 3. MÓDOSÍTÁS: Szövegcsere ikonra az első hovernél
+            // FONTOS: Kikapcsoljuk a lüktetést, hogy a JS növelni tudja a gombot
+            yesBtn.style.animation = "none";
+
+            // Szövegcsere ikonra
             noBtn.innerText = "😠";
 
             // Méretezés
             yesScale = yesScale * 1.15; // +15%
             noScale = noScale * 0.92;   // -8%
 
-            // Megjegyzés: Amikor itt JS-ből állítjuk a transform-ot, 
-            // az felülírja a CSS lüktető animációját. Ez így jó, 
-            // mert innentől a növekedés a lényeg.
             yesBtn.style.transform = `scale(${yesScale})`;
             noBtn.style.transform = `scale(${noScale})`;
 
@@ -160,7 +161,7 @@
 
             document.body.innerHTML += `
                 <div class="success">
-                    Yay, tudtam! ❤️<br>
+                    Yay! Legjobb válasz! ❤️<br>
                     Öveket becsatolni, ütközés!
                 </div>
             `;
