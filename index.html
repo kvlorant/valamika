@@ -12,19 +12,18 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            /* MÓDOSÍTÁS 1: Új háttérszín beállítása */
-            background: #230d24; 
+            /* Kért háttérszín */
+            background: #1c101a; 
             color: white;
             font-family: Arial, sans-serif;
             overflow: hidden;
-            transition: 0.5s ease;
         }
 
         h1 {
             font-size: 2.5rem;
             margin-bottom: 40px;
             text-align: center;
-            z-index: 10; /* Hogy a szöveg mindig a gombok felett legyen */
+            z-index: 10;
         }
 
         .buttons {
@@ -40,8 +39,9 @@
             border-radius: 12px;
             cursor: pointer;
             position: absolute;
-            transition: all 0.3s ease; /* Simább átmenet a növekedéshez/mozgáshoz */
-            z-index: 10;
+            /* CSAK a méretváltozás (transform) legyen animálva, a mozgás nem! Így azonnal ugrik. */
+            transition: transform 0.2s ease; 
+            z-index: 20; /* Magas z-index, hogy biztosan kattintható legyen */
         }
 
         #yes {
@@ -49,8 +49,7 @@
             top: 100px;
             background: #4CAF50;
             color: white;
-            transform: scale(1.5); /* Kezdő méret */
-            box-shadow: 0 0 20px rgba(76, 175, 80, 0.5); /* Kis ragyogás */
+            /* Nincs box-shadow (glow) */
         }
 
         #no {
@@ -64,12 +63,17 @@
             font-size: 3rem;
             text-align: center;
             animation: pop 0.6s ease forwards;
-            z-index: 20;
+            z-index: 30;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
         }
 
         @keyframes pop {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
 
         canvas {
@@ -97,59 +101,56 @@
         const yesBtn = document.getElementById("yes");
         const questionText = document.getElementById("question");
 
-        // MÓDOSÍTÁS 2: Állapotkövető változók
-        // Nyomon követjük az aktuális méreteket.
-        // Az Igen gomb 1.5-ről indul (lásd CSS), a Nem gomb 1.0-ról.
-        let currentYesScale = 1.5;
-        let currentNoScale = 1.0;
+        // Kezdőértékek
+        let yesScale = 1;
+        let noScale = 1;
 
+        // A NEM gomb logikája (mozgás + méretezés)
         noBtn.addEventListener("mouseover", () => {
-            // --- Igen gomb növelése ---
-            // Minden hovernél 50%-kal nő (megszorozzuk 1.5-tel)
-            currentYesScale *= 1.5;
-            yesBtn.style.transform = `scale(${currentYesScale})`;
-            
-            // --- Nem gomb zsugorítása ---
-            // Minden hovernél 20%-kal csökken (megszorozzuk 0.8-cal)
-            currentNoScale *= 0.8;
-            // Fontos: A ugrásnál a scale-t is alkalmazni kell, különben visszaugrik az eredeti méretre
-            
-            // --- Nem gomb nagy ugrása ---
-            // Az előző kód csak egy kis 300x200-as dobozban ugrált.
-            // Mostantól a teljes képernyőn bárhová ugorhat.
-            
-            // Kiszámoljuk az elérhető szélességet és magasságot (levonva a gomb méretét, hogy ne lógjon ki)
-            const availableWidth = window.innerWidth - noBtn.offsetWidth;
-            const availableHeight = window.innerHeight - noBtn.offsetHeight;
-            
-            const newLeft = Math.random() * availableWidth;
-            const newTop = Math.random() * availableHeight;
+            // 1. Méretek számolása
+            yesScale = yesScale * 1.5; // Igen gomb 50%-kal nő
+            noScale = noScale * 0.8;   // Nem gomb 20%-kal csökken
 
-            // A gomb pozícióját 'fixed'-re állítjuk, hogy a teljes ablakhoz viszonyítson, ne a .buttons dobozhoz
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = newLeft + "px";
-            noBtn.style.top = newTop + "px";
-            
-            // Alkalmazzuk az új (kisebb) méretet az új pozícióban is
-            noBtn.style.transform = `scale(${currentNoScale})`;
+            // 2. Méretek alkalmazása
+            yesBtn.style.transform = `scale(${yesScale})`;
+            noBtn.style.transform = `scale(${noScale})`;
+
+            // 3. Ugrás (Teleport)
+            // Kiszámoljuk a képernyő szabad területét
+            const maxX = window.innerWidth - noBtn.offsetWidth;
+            const maxY = window.innerHeight - noBtn.offsetHeight;
+
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+
+            // Fix pozicionálás, hogy bárhová ugorhasson a képernyőn
+            noBtn.style.position = "fixed"; 
+            noBtn.style.left = randomX + "px";
+            noBtn.style.top = randomY + "px";
         });
 
+        // Az IGEN gomb logikája (kattintás)
         yesBtn.addEventListener("click", () => {
+            // Háttérszín váltás
             document.body.style.background = "linear-gradient(135deg, #ff416c, #ff4b2b)";
-            // Eltüntetjük a gombokat és a kérdést
+            
+            // Eltüntetjük a régi elemeket
             noBtn.style.display = "none";
             yesBtn.style.display = "none";
             questionText.style.display = "none";
 
+            // Megjelenítjük az üzenetet
             document.body.innerHTML += `
-                <div class="success" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%;">
+                <div class="success">
                     Yay! Legjobb döntés! ❤️
                 </div>
             `;
+            
+            // Indítjuk a konfettit
             startConfetti();
         });
 
-        // Konfetti kód (változatlan)
+        // Konfetti animáció
         function startConfetti() {
             const canvas = document.getElementById("confetti");
             const ctx = canvas.getContext("2d");
@@ -157,4 +158,41 @@
             canvas.height = window.innerHeight;
             
             const pieces = [];
-            const colors = ["#ff4b2b",
+            const colors = ["#ff4b2b", "#ff416c", "#4CAF50", "#FFD700", "#00C9FF", "#ffffff"];
+
+            for (let i = 0; i < 200; i++) {
+                pieces.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    size: Math.random() * 10 + 5,
+                    speed: Math.random() * 5 + 3,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    rotation: Math.random() * 360,
+                    rotationSpeed: Math.random() * 10 - 5
+                });
+            }
+
+            function update() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                pieces.forEach(p => {
+                    p.y += p.speed;
+                    p.rotation += p.rotationSpeed;
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotation * Math.PI / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    ctx.restore();
+                    
+                    if (p.y > canvas.height) {
+                        p.y = -20;
+                        p.x = Math.random() * canvas.width;
+                    }
+                });
+                requestAnimationFrame(update);
+            }
+            update();
+        }
+    </script>
+</body>
+</html>
